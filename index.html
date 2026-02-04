@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>English For Immigrants — Apps</title>
+  <style>
+    :root{
+      --bg:#0b1220; --card:#101b33; --text:#e8eefc; --muted:#a9b7df;
+      --btn:#2f6bff; --btn2:#24355f; --ring:rgba(47,107,255,.35);
+    }
+    *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+    body{margin:0;background:radial-gradient(1200px 700px at 30% -10%, #1b3a8a 0%, transparent 55%),
+                     radial-gradient(900px 600px at 100% 0%, #7c3aed 0%, transparent 45%),
+                     var(--bg); color:var(--text);}
+    .wrap{max-width:860px;margin:0 auto;padding:22px 14px 40px}
+    .top{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+    .logo{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#2f6bff,#7c3aed);
+          display:flex;align-items:center;justify-content:center;font-weight:900}
+    h1{margin:0;font-size:18px;letter-spacing:.2px}
+    p{margin:2px 0 0;color:var(--muted);font-size:13px}
+    .bar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 18px}
+    .chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
+          padding:8px 10px;border-radius:12px;font-size:12px;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    @media (max-width:700px){.grid{grid-template-columns:1fr}}
+    .card{background:rgba(16,27,51,.92);border:1px solid rgba(255,255,255,.08);
+          border-radius:16px;padding:14px;box-shadow:0 10px 24px rgba(0,0,0,.25)}
+    .title{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .name{font-weight:800;font-size:15px}
+    .tag{font-size:11px;color:var(--muted);background:rgba(255,255,255,.06);
+         border:1px solid rgba(255,255,255,.08);padding:4px 8px;border-radius:999px;white-space:nowrap}
+    .desc{margin:8px 0 12px;color:var(--muted);font-size:13px;line-height:1.35}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    a.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+          padding:10px 12px;border-radius:12px;text-decoration:none;font-weight:800;font-size:13px}
+    .primary{background:var(--btn);color:white;box-shadow:0 0 0 0 var(--ring)}
+    .primary:hover{box-shadow:0 0 0 6px var(--ring)}
+    .secondary{background:var(--btn2);color:var(--text);border:1px solid rgba(255,255,255,.10)}
+    .foot{margin-top:18px;color:var(--muted);font-size:12px}
+    .small{opacity:.9}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="logo">EFI</div>
+      <div>
+        <h1>English For Immigrants — Apps</h1>
+        <p>Pick a trainer. Practice daily. Real-life US English.</p>
+      </div>
+    </div>
+
+    <div class="bar">
+      <div class="chip">🇺🇸 American English</div>
+      <div class="chip">🎧 Listening + Speaking</div>
+      <div class="chip">🧠 Levels: A1 → B1</div>
+    </div>
+
+    <div class="grid">
+
+      <!-- 1) Numbers -->
+      <div class="card">
+        <div class="title">
+          <div class="name">English For Immigrants: Numbers</div>
+          <div class="tag">Daily drill</div>
+        </div>
+        <div class="desc">Train numbers by ear: fast, clean, real-life pacing.</div>
+        <div class="row">
+          <a class="btn primary" href="PASTE_YOUR_NUMBERS_URL_HERE" target="_blank" rel="noopener">Open</a>
+          <a class="btn secondary" href="PASTE_YOUR_NUMBERS_URL_HERE" target="_blank" rel="noopener">Copy link</a>
+        </div>
+      </div>
+
+      <!-- 2) Cashier -->
+      <div class="card">
+        <div class="title">
+          <div class="name">English For Immigrants: Cashier</div>
+          <div class="tag">NYC store</div>
+        </div>
+        <div class="desc">Hear a customer order → repeat → auto-check meaning (not perfect grammar).</div>
+        <div class="row">
+          <a class="btn primary" href="PASTE_YOUR_CASHIER_URL_HERE" target="_blank" rel="noopener">Open</a>
+          <a class="btn secondary" href="PASTE_YOUR_CASHIER_URL_HERE" target="_blank" rel="noopener">Copy link</a>
+        </div>
+      </div>
+
+      <!-- 3) Placeholder -->
+      <div class="card">
+        <div class="title">
+          <div class="name">English For Immigrants: (Next)</div>
+          <div class="tag">Coming soon</div>
+        </div>
+        <div class="desc">Add more apps here: “Restaurant”, “Subway”, “Doctor”, “Interview”, etc.</div>
+        <div class="row">
+          <a class="btn secondary" href="#" onclick="alert('Coming soon');return false;">Not live yet</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="foot">
+      <div class="small">Tip: after you update a URL, just edit this page in GitHub — Vercel redeploys automatically.</div>
+    </div>
+  </div>
+
+  <script>
+    // Optional: make "Copy link" actually copy
+    document.querySelectorAll('a.secondary').forEach(a=>{
+      a.addEventListener('click', async (e)=>{
+        const url = a.getAttribute('href');
+        if(!url || url === '#') return;
+        e.preventDefault();
+        try{
+          await navigator.clipboard.writeText(url);
+          a.textContent = "Copied ✅";
+          setTimeout(()=>a.textContent="Copy link",1200);
+        }catch{
+          window.prompt("Copy this link:", url);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
