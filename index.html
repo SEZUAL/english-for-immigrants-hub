@@ -121,5 +121,103 @@
       });
     });
   </script>
+  <style>
+    /* Шторка, которая закрывает сайт */
+    #access-lock { 
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+        background: #ffffff; z-index: 999999; 
+        display: flex; flex-direction: column; align-items: center; justify-content: center; 
+        font-family: Arial, sans-serif; text-align: center;
+    }
+    .lock-content { max-width: 400px; padding: 20px; }
+    input { padding: 12px; width: 100%; margin: 15px 0; border: 2px solid #ddd; border-radius: 5px; font-size: 16px; box-sizing: border-box; }
+    button { padding: 12px 25px; background: #000; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; }
+    button:disabled { background: #ccc; }
+    .error { color: red; margin-top: 10px; display: none; }
+</style>
+
+<div id="access-lock">
+    <div class="lock-content">
+        <h2>🔒 Доступ только по ключу</h2>
+        <p>Введите лицензионный ключ, который пришел вам на почту после оплаты.</p>
+        
+        <input type="text" id="license-key" placeholder="Вставьте ключ (например: 1234-ABCD...)">
+        <button onclick="verifyKey()" id="btn-verify">Открыть доступ</button>
+        
+        <p id="error-msg" class="error"></p>
+    </div>
+</div>
+
+<script>
+    // !!! ВАЖНО: ЗАМЕНИ ЭТО НА СВОЙ PERMALINK ИЗ GUMROAD !!!
+    const MY_PERMALINK = 'english-for-immigrants-numbers'; 
+    // Например: const MY_PERMALINK = 'super-english';
+
+    const lockScreen = document.getElementById('access-lock');
+    const errorText = document.getElementById('error-msg');
+    const btn = document.getElementById('btn-verify');
+
+    // 1. Проверяем, вводил ли человек ключ раньше
+    // Мы сохраняем ключ как 'license_english', чтобы браузер его запомнил
+    const savedKey = localStorage.getItem('license_' + MY_PERMALINK);
+    
+    if (savedKey) {
+        // Если ключ есть в памяти — убираем шторку сразу
+        lockScreen.style.display = 'none';
+    }
+
+    // 2. Функция проверки ключа через интернет
+    async function verifyKey() {
+        const key = document.getElementById('license-key').value.trim();
+        
+        if (!key) {
+            errorText.innerText = "Пожалуйста, введите ключ.";
+            errorText.style.display = "block";
+            return;
+        }
+
+        btn.innerText = "Проверка...";
+        btn.disabled = true;
+        errorText.style.display = "none";
+
+        try {
+            // Стучимся в Gumroad
+            const response = await fetch('https://api.gumroad.com/v2/licenses/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `product_permalink=${MY_PERMALINK}&license_key=${key}`
+            });
+
+            const data = await response.json();
+
+            // Проверяем ответ:
+            // success: true (ключ существует)
+            // refunded: false (деньги не возвращали)
+            // uses: количество активаций (ставим лимит 10)
+            
+            if (data.success && !data.purchase.refunded && data.uses <= 10) {
+                // УРА! ПУСКАЕМ
+                localStorage.setItem('license_' + MY_PERMALINK, key); // Запоминаем
+                lockScreen.style.display = 'none'; // Открываем сайт
+            } else {
+                // ОШИБКА
+                let message = "Неверный ключ.";
+                if (data.purchase && data.purchase.refunded) message = "Ключ отозван (возврат средств).";
+                if (data.uses > 10) message = "Превышен лимит активаций (макс. 10).";
+                
+                errorText.innerText = message;
+                errorText.style.display = "block";
+                btn.innerText = "Открыть доступ";
+                btn.disabled = false;
+            }
+
+        } catch (e) {
+            errorText.innerText = "Ошибка соединения. Проверьте интернет.";
+            errorText.style.display = "block";
+            btn.innerText = "Открыть доступ";
+            btn.disabled = false;
+        }
+    }
+</script>
 </body>
 </html>
